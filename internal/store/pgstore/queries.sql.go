@@ -9,7 +9,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const getMessage = `-- name: GetMessage :one
@@ -116,7 +115,7 @@ RETURNING "id"
 
 type InsertMessageParams struct {
 	RoomID  uuid.UUID
-	Message pgtype.Text
+	Message string
 }
 
 func (q *Queries) InsertMessage(ctx context.Context, arg InsertMessageParams) (uuid.UUID, error) {
@@ -133,7 +132,7 @@ INSERT INTO rooms
 RETURNING "id"
 `
 
-func (q *Queries) InsertRoom(ctx context.Context, theme pgtype.Text) (uuid.UUID, error) {
+func (q *Queries) InsertRoom(ctx context.Context, theme string) (uuid.UUID, error) {
 	row := q.db.QueryRow(ctx, insertRoom, theme)
 	var id uuid.UUID
 	err := row.Scan(&id)
